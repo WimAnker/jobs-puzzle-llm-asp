@@ -9,7 +9,7 @@ import pandas as pd
 import openai
 
 # Enter your GPT-3 API key here
-API_KEY = '***REMOVED***'
+API_KEY = ''
 # [optional] you may also put your ORG key below
 ORG_KEY = ''
 
