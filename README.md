@@ -4,39 +4,29 @@ This is the implementation of [Leveraging Large Language Models to Generate Answ
 
 ## Installation
 
-# 1) Create & activate Conda env (Python 3.11)
-conda create --name gpt3-r -c conda-forge python=3.11 -y
+nstallation
+Create and activate a Conda environment with Python 3.11 and install the required dependencies:
+conda create --name gpt3-r -c conda-forge python=3.11 clingo=5.6 tqdm xlsxwriter -y
 conda activate gpt3-r
-
-# 2) Install dependencies
-#    - clingo 5.6 for ASP solving
-#    - tqdm, xlsxwriter for utilities
-#    - openai (>=2.x) for the Responses API
-#    - python-dotenv (optional) for loading API keys from .env
-conda install -c conda-forge clingo=5.6 tqdm xlsxwriter -y
 pip install --upgrade openai python-dotenv
 
-# 3) Set your OpenAI API key (PICK ONE of the two options below)
-#    Windows PowerShell:
-# setx OPENAI_API_KEY "your_api_key_here"
-#    macOS/Linux:
-# export OPENAI_API_KEY="your_api_key_here"
+Set the OpenAI API key in your system environment:
+Windows PowerShell: setx OPENAI_API_KEY "your_api_key_here"
+macOS / Linux: export OPENAI_API_KEY="your_api_key_here"
 
-# 4) (Optional) Verify OpenAI install/version
+You can verify installation by printing installed package versions:
 python - <<'PY'
 import pkg_resources
-try:
-    v = pkg_resources.get_distribution('openai').version
-    print("openai version:", v)
-except Exception as e:
-    print("Could not read openai version:", e)
+print("openai version:", pkg_resources.get_distribution('openai').version)
 PY
 
-# 5) Notes
-# - The original 'text-davinci-003' is deprecated; full baseline rebuild is not possible.
-# - Cached GPT-3.5/GPT-4 runs reproduce the paper’s outputs; rebuilds require newer models.
-# - This repo uses the updated OpenAI Responses API and revised prompts for GPT-4.1 / GPT-5.
-# - Ensure your scripts reference `client.responses.create(...)` (not ChatCompletion).
+Notes:
+
+text-davinci-003 (GPT-3) is deprecated, so rebuilding baseline results with that model is no longer possible
+GPT-3.5 and GPT-4 cached results still reproduce the original paper findings
+Rebuilding with GPT-4 and GPT-5 requires the updated OpenAI API and prompt adjustments
+
+The scripts now use the modern Responses API instead of the legacy Completion/ChatCompletion API
 
 ## Preparation
 Include your OpenAI API key in line 2 of `api_keys.py`.
