@@ -1,0 +1,35 @@
+% Task 1. Define the constants in each category.
+people("Roberta"; "Thelma"; "Steve"; "Pete").
+jobs("chef"; "guard"; "nurse"; "telephone operator"; "police officer"; "teacher"; "actor"; "boxer").
+% Task 2. For each person P, they hold exactly 2 jobs J.
+{assign(P, J): jobs(J)}=2 :- people(P).
+
+% 5. The job of nurse is held by a male.
+P="Steve" or P="Pete" :- assign(P,J), J="nurse".
+
+% 6. The husband of the chef is the telephone operator, which means the chef is a female and the telephone operator is a male.
+P="Roberta" or P="Thelma" :- assign(P,J), J="chef".
+P="Steve" or P="Pete" :- assign(P,J), J="telephone operator".
+
+% 7. Roberta is not a boxer.
+J!="boxer" :- assign(P,J), P="Roberta".
+
+% 8. Pete has no education past the ninth grade. (Three jobs teacher, nurse, and police officer require higher education.)
+{J="teacher"; J="nurse"; J="police officer"}=0 :- assign(P,J), P="Pete".
+
+% 9. Roberta, the chef, and the police officer went golfing together, meaning they are different people.
+P1!=P2 :- assign(P1,J1), assign(P2,J2), assign(P3,J3), P1="Roberta", J2="chef", J3="police officer".    
+P2!=P3 :- assign(P1,J1), assign(P2,J2), assign(P3,J3), P1="Roberta", J2="chef", J3="police officer".    
+P1!=P3 :- assign(P1,J1), assign(P2,J2), assign(P3,J3), P1="Roberta", J2="chef", J3="police officer".    
+
+% 10.1 The same job cannot be assigned to different people.
+{P1=P2}=0 :- assign(P1,J), assign(P2,J), P1!=P2.
+
+% 10.2 Roberta is a female.
+% 10.3 Thelma is a female.
+% 10.4 Steve is a male.
+% 10.5 Pete is a male.
+% These constraints are already considered in the constraints above.
+
+% 10.6 The actor is a male.
+P="Steve" or P="Pete" :- assign(P,J), J="actor".

@@ -1,0 +1,17 @@
+PS C:\Users\Gebruiker\Projecten\gpt3-r> python jobs_puzzle.py --engine gpt-5-turbo 
+[ERROR] gpt-5-turbo attempt 1: The model `gpt-5-turbo` does not exist or you do not have access to it.
+[ERROR] gpt-5-turbo attempt 2: The model `gpt-5-turbo` does not exist or you do not have access to it.
+[ERROR] gpt-5-turbo attempt 3: The model `gpt-5-turbo` does not exist or you do not have access to it.
+[FAIL] Could not get content for gpt-5-turbo key=af986e4268a2a0f5. Last error: The model `gpt-5-turbo` does not exist or you do not have access to it.
+[ERROR] gpt-5-turbo attempt 1: The model `gpt-5-turbo` does not exist or you do not have access to it.
+[ERROR] gpt-5-turbo attempt 2: The model `gpt-5-turbo` does not exist or you do not have access to it.
+[ERROR] gpt-5-turbo attempt 3: The model `gpt-5-turbo` does not exist or you do not have access to it.
+[FAIL] Could not get content for gpt-5-turbo key=c8b5695279c9f12f. Last error: The model `gpt-5-turbo` does not exist or you do not have access to it.
+[ERROR] gpt-5-turbo attempt 1: The model `gpt-5-turbo` does not exist or you do not have access to it.
+[ERROR] gpt-5-turbo attempt 2: The model `gpt-5-turbo` does not exist or you do not have access to it.
+[ERROR] gpt-5-turbo attempt 3: The model `gpt-5-turbo` does not exist or you do not have access to it.
+[FAIL] Could not get content for gpt-5-turbo key=126f8ab741167c48. Last error: The model `gpt-5-turbo` does not exist or you do not have access to it.
+[ERROR] gpt-5-turbo attempt 1: The model `gpt-5-turbo` does not exist or you do not have access to it.
+[ERROR] gpt-5-turbo attempt 2: The model `gpt-5-turbo` does not exist or you do not have access to it.
+[ERROR] gpt-5-turbo attempt 3: The model `gpt-5-turbo` does not exist or you do not have access to it.
+[FAIL] Could not get content for gpt-5-turbo key=e91d60e80cc92656. Last error: The model `gpt-5-turbo` does not exist or you do not have access to it.

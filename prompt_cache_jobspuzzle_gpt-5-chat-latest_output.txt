@@ -1,0 +1,194 @@
+[MISS→SAVE] gpt-5-chat-latest key=af986e4268a2a0f5 len=188
+[MISS→SAVE] gpt-5-chat-latest key=2a0ae1e2f632e27e len=2301
+[MISS→SAVE] gpt-5-chat-latest key=513d22c8ff0d8c32 len=1600
+[MISS→SAVE] gpt-5-chat-latest key=bc2f269b662c6d10 len=3643
+Excellent — you’ve already reasoned through the structure.  
+Now let’s write the **ASP rules** for **Problem 2**, following the same pattern as in Problem 1.
+
+---
+
+### Task 1.  Represent each category of constants
+
+We write one rule per category, listing all constants separated by semicolons:
+
+```prolog
+person("Roberta"; "Thelma"; "Steve"; "Pete").
+job("chef"; "guard"; "nurse"; "telephone operator"; "police officer"; "teacher"; "actor"; "boxer").     
+gender("male"; "female").
+```
+
+---
+
+### Task 2.  Write rules for each predicate
+
+We have two predicates:
+
+1. `holds(Person, Job)` — each person holds exactly two jobs.
+2. `has_gender(Person, Gender)` — each person has exactly one gender.
+
+Following the required pattern
+`{predicate(X₁,…,Xₙ): category₂(X₂),…,categoryₙ(Xₙ)}=k :- category₁(X₁).`
+
+---
+
+#### (a)  Each person holds exactly two jobs
+
+```prolog
+{holds(P, J): job(J)} = 2 :- person(P).
+```
+
+#### (b)  Each person has exactly one gender
+
+```prolog
+{has_gender(P, G): gender(G)} = 1 :- person(P).
+```
+
+---
+
+✅ **Final ASP Rules for Problem 2**
+
+```prolog
+% --- Task 1: Define constants in each category ---
+person("Roberta"; "Thelma"; "Steve"; "Pete").
+job("chef"; "guard"; "nurse"; "telephone operator"; "police officer"; "teacher"; "actor"; "boxer").     
+gender("male"; "female").
+
+% --- Task 2: Define predicate rules ---
+% Each person holds exactly two jobs.
+{holds(P, J): job(J)} = 2 :- person(P).
+
+% Each person has exactly one gender.
+{has_gender(P, G): gender(G)} = 1 :- person(P).
+```
+
+These rules complete Tasks 1 and 2 for Problem 2 in the same style as the example from Problem 1.       
+
+Excellent — now that we have the predicates, we can translate each clue into formal constraints, just as in the earlier problems.
+
+---
+
+## Problem 3 Constraints
+
+### Predicates
+```prolog
+% The categories in Constants include person, job, and gender.
+% We use different variables P, J, and G to represent person, job, and gender.
+
+% Predicate 1: A person P holds a job J.
+holds(P, J)
+
+% Predicate 2: A person P has a gender G.
+has_gender(P, G)
+```
+
+---
+
+### Constraints
+
+#### 1. Each person holds exactly two jobs.
+```prolog
+{J="chef"; J="guard"; J="nurse"; J="telephone operator"; J="police officer"; J="teacher"; J="actor"; J="boxer"}=2 :- holds(P,J).
+```
+
+#### 2. The same job cannot be assigned to different people.
+```prolog
+P1 != P2 :- holds(P1,J), holds(P2,J), P1 != P2.
+```
+
+#### 3. Each person has exactly one gender.
+```prolog
+{G="male"; G="female"}=1 :- has_gender(P,G).
+```
+
+#### 4. The job of nurse is held by a male.
+```prolog
+G="male" :- holds(P,"nurse"), has_gender(P,G).
+```
+
+#### 5. The husband of the chef is the telephone operator.
+- The chef is female.
+- The telephone operator is male.
+- They are different people.
+```prolog
+G1="female" :- holds(P1,"chef"), has_gender(P1,G1).
+G2="male" :- holds(P2,"telephone operator"), has_gender(P2,G2).
+P1 != P2 :- holds(P1,"chef"), holds(P2,"telephone operator").
+```
+
+#### 6. Roberta is not a boxer.
+```prolog
+J != "boxer" :- holds("Roberta",J).
+```
+
+#### 7. Pete has no education past the ninth grade.
+(He cannot hold teacher, nurse, or police officer.)
+```prolog
+{J="teacher"; J="nurse"; J="police officer"}=0 :- holds("Pete",J).
+```
+
+#### 8. Roberta, the chef, and the police officer went golfing together (so they are different people). 
+```prolog
+P1 != P2 :- holds(P1,"chef"), holds(P2,"police officer").
+P1 != "Roberta" :- holds(P1,"chef").
+P2 != "Roberta" :- holds(P2,"police officer").
+```
+
+#### 9. Gender facts (given directly):
+```prolog
+has_gender("Roberta","female").
+has_gender("Thelma","female").
+has_gender("Steve","male").
+has_gender("Pete","male").
+```
+
+#### 10. The actor is a male.
+```prolog
+G="male" :- holds(P,"actor"), has_gender(P,G).
+```
+
+---
+
+✅ **Final Set of Constraints**
+
+```prolog
+% 1. Each person holds exactly two jobs.
+{J="chef"; J="guard"; J="nurse"; J="telephone operator"; J="police officer"; J="teacher"; J="actor"; J="boxer"}=2 :- holds(P,J).
+
+% 2. The same job cannot be assigned to different people.
+P1 != P2 :- holds(P1,J), holds(P2,J), P1 != P2.
+
+% 3. Each person has exactly one gender.
+{G="male"; G="female"}=1 :- has_gender(P,G).
+
+% 4. The job of nurse is held by a male.
+G="male" :- holds(P,"nurse"), has_gender(P,G).
+
+% 5. The husband of the chef is the telephone operator.
+G1="female" :- holds(P1,"chef"), has_gender(P1,G1).
+G2="male" :- holds(P2,"telephone operator"), has_gender(P2,G2).
+P1 != P2 :- holds(P1,"chef"), holds(P2,"telephone operator").
+
+% 6. Roberta is not a boxer.
+J != "boxer" :- holds("Roberta",J).
+
+% 7. Pete cannot hold teacher, nurse, or police officer.
+{J="teacher"; J="nurse"; J="police officer"}=0 :- holds("Pete",J).
+
+% 8. Roberta, the chef, and the police officer are different people.
+P1 != P2 :- holds(P1,"chef"), holds(P2,"police officer").
+P1 != "Roberta" :- holds(P1,"chef").
+P2 != "Roberta" :- holds(P2,"police officer").
+
+% 9. Gender facts.
+has_gender("Roberta","female").
+has_gender("Thelma","female").
+has_gender("Steve","male").
+has_gender("Pete","male").
+
+% 10. The actor is a male.
+G="male" :- holds(P,"actor"), has_gender(P,G).
+```
+
+---
+
+These constraints fully capture all the logical relationships and restrictions described in **Problem 3** using only the provided constants and predicates.

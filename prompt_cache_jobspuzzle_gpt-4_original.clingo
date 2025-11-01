@@ -1,0 +1,46 @@
+% Task 1. Define the constants in each category.
+person("Roberta"; "Thelma"; "Steve"; "Pete").
+job("chef"; "guard"; "nurse"; "telephone operator"; "police officer"; "teacher"; "actor"; "boxer").
+
+% Task 2. For each person P, they hold exactly 2 jobs J1 and J2.
+{holds_jobs(P, J1, J2): job(J1), job(J2), J1 != J2}=1 :- person(P).
+
+% 5. The job of nurse is held by a male.
+{P="Steve"; P="Pete"}=1 :- holds_jobs(P,J1,J2), (J1="nurse"; J2="nurse").
+
+% 6. The husband of the chef is the telephone operator, which means the chef is a female and the telephone operator is a male.
+{P="Roberta"; P="Thelma"}=1 :- holds_jobs(P,J1,J2), (J1="chef"; J2="chef").
+{P="Steve"; P="Pete"}=1 :- holds_jobs(P,J1,J2), (J1="telephone operator"; J2="telephone operator").
+
+% 7. Roberta is not a boxer.
+{J1!="boxer"; J2!="boxer"}=1 :- holds_jobs(P,J1,J2), P="Roberta".
+
+% 8. Pete has no education past the ninth grade. (Three jobs teacher, nurse, and police officer require higher education.)
+{J1!="teacher"; J1!="nurse"; J1!="police officer"}=1 :- holds_jobs(P,J1,J2), P="Pete".
+{J2!="teacher"; J2!="nurse"; J2!="police officer"}=1 :- holds_jobs(P,J1,J2), P="Pete".
+
+% 9. Roberta, the chef, and the police officer went golfing together, meaning they are different people.
+P1!=P2 :- holds_jobs(P1,J1_1,J1_2), holds_jobs(P2,J2_1,J2_2), holds_jobs(P3,J3_1,J3_2), P1="Roberta", (J2_1="chef"; J2_2="chef"), (J3_1="police officer"; J3_2="police officer").
+P2!=P3 :- holds_jobs(P1,J1_1,J1_2), holds_jobs(P2,J2_1,J2_2), holds_jobs(P3,J3_1,J3_2), P1="Roberta", (J2_1="chef"; J2_2="chef"), (J3_1="police officer"; J3_2="police officer").
+P1!=P3 :- holds_jobs(P1,J1_1,J1_2), holds_jobs(P2,J2_1,J2_2), holds_jobs(P3,J3_1,J3_2), P1="Roberta", (J2_1="chef"; J2_2="chef"), (J3_1="police officer"; J3_2="police officer").
+
+% 10.1 The same job cannot be assigned to different people.
+{P1=P2; J1=J2}=0 :- holds_jobs(P1,J1,J1_2), holds_jobs(P2,J2,J2_2), (P1,J1)!=(P2,J2).
+{P1=P2; J1=J2_2}=0 :- holds_jobs(P1,J1,J1_2), holds_jobs(P2,J2,J2_2), (P1,J1)!=(P2,J2_2).
+{P1=P2; J1_2=J2}=0 :- holds_jobs(P1,J1,J1_2), holds_jobs(P2,J2,J2_2), (P1,J1_2)!=(P2,J2).
+{P1=P2; J1_2=J2_2}=0 :- holds_jobs(P1,J1,J1_2), holds_jobs(P2,J2,J2_2), (P1,J1_2)!=(P2,J2_2).
+
+% 10.2 Roberta is a female.
+% No constraint needed as it is a fact.
+
+% 10.3 Thelma is a female.
+% No constraint needed as it is a fact.
+
+% 10.4 Steve is a male.
+% No constraint needed as it is a fact.
+
+% 10.5 Pete is a male.
+% No constraint needed as it is a fact.
+
+% 10.6 The actor is a male.
+{P="Steve"; P="Pete"}=1 :- holds_jobs(P,J1,J2), (J1="actor"; J2="actor").

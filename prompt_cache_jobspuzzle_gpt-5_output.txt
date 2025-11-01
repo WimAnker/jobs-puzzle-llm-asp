@@ -1,0 +1,25 @@
+[WARN] Empty content from model on attempt 1 (engine=gpt-5, key=af986e4268a2a0f5).
+[MISS→SAVE] gpt-5 key=af986e4268a2a0f5 len=364
+[MISS→SAVE] gpt-5 key=38886aa4e3994cf4 len=251
+[WARN] Empty content from model on attempt 1 (engine=gpt-5, key=00a2dbbbce6a9ce9).
+[WARN] Empty content from model on attempt 2 (engine=gpt-5, key=00a2dbbbce6a9ce9).
+[WARN] Empty content from model on attempt 3 (engine=gpt-5, key=00a2dbbbce6a9ce9).
+[FAIL] Could not get content for gpt-5 key=00a2dbbbce6a9ce9. Last error: empty_content
+[WARN] Empty content from model on attempt 1 (engine=gpt-5, key=bdcae002cde7148f).
+[WARN] Empty content from model on attempt 2 (engine=gpt-5, key=bdcae002cde7148f).
+[ERROR] gpt-5 attempt 3: HTTP code 502 from API (<html>
+<head><title>502 Bad Gateway</title></head>
+<body>
+<center><h1>502 Bad Gateway</h1></center>
+<hr><center>cloudflare</center>
+</body>
+</html>
+)
+[FAIL] Could not get content for gpt-5 key=bdcae002cde7148f. Last error: HTTP code 502 from API (<html>
+<head><title>502 Bad Gateway</title></head>
+<body>
+<center><h1>502 Bad Gateway</h1></center>
+<hr><center>cloudflare</center>
+</body>
+</html>
+)

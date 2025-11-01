@@ -1,0 +1,63 @@
+% Task 1. Define the constants in each category.
+index_of_person(0; 1; 2; 3).
+index_of_job(0; 1; 2; 3; 4; 5; 6; 7).
+index_of_gender(0; 1).
+index_of_education(0; 1).
+% Task 2. For each person Ip, there are exactly 2 jobs assigned at some column Ij.
+{assign(Ip, Ij): index_of_job(Ij)}=2 :- index_of_person(Ip).
+% Task 3. For each job Ij, there are exactly 2 people assigned at some row Ip.
+{assign(Ip, Ij): index_of_person(Ip)}=2 :- index_of_job(Ij).
+% Task 4. For each person Ip, there are exactly 2 genders assigned at some column Ig.
+{assign_gender(Ip, Ij, Ig): index_of_gender(Ig)}=2 :- index_of_person(Ip).
+% Task 5. For each job Ij, there is exactly 1 gender assigned at some row Ig.
+{assign_gender(Ip, Ij, Ig): index_of_person(Ip)}=1 :- index_of_job(Ij).
+% Task 6. For each person Ip, there are exactly 2 education levels assigned at some column Ie.
+{assign_education(Ip, Ij, Ie): index_of_education(Ie)}=2 :- index_of_person(Ip).
+% Task 7. For each job Ij, there is exactly 1 education level assigned at some row Ie.
+{assign_education(Ip, Ij, Ie): index_of_person(Ip)}=1 :- index_of_job(Ij).
+% Task 8. For each person Ip, there is exactly 1 gender assigned at some column Ig and 1 education level assigned at some column Ie.
+{assign_gender(Ip, Ij, Ig), assign_education(Ip, Ij, Ie)}=1 :- index_of_person(Ip).
+% Task 9. For each person Ip, there is exactly 1 job assigned at some column Ij and 1 gender assigned at some column Ig.
+{assign(Ip, Ij), assign_gender(Ip, Ij, Ig)}=1 :- index_of_person(Ip).
+% Task 10. For each person Ip, there is exactly 1 job assigned at some column Ij and 1 education level assigned at some column Ie.
+{assign(Ip, Ij), assign_education(Ip, Ij, Ie)}=1 :- index_of_person(Ip).
+% Task 11. For each person Ip, there is exactly 1 job assigned at some column Ij and 1 gender assigned at some column Ig and 1 education level assigned at some column Ie.
+{assign(Ip, Ij), assign_gender(Ip, Ij, Ig), assign_education(Ip, Ij, Ie)}=1 :- index_of_person(Ip).
+% Done tasks 1-11.
+
+% 5. The job of nurse is held by a male.
+G="male" :- assign_gender(P,"nurse",G).
+
+% 6. The husband of the chef is the telephone operator, which means the chef is a female and the telephone operator is a male.
+G1="female" :- assign_gender(P1,"chef",G1).
+G2="male" :- assign_gender(P2,"telephone operator",G2).
+P1=P2 :- assign(P1,"chef"), assign(P2,"telephone operator").
+
+% 7. Roberta is not a boxer.
+J!="boxer" :- assign("Roberta",J).
+
+% 8. Pete has no education past the ninth grade. (Three jobs teacher, nurse, and police officer require higher education.)
+E="ninth grade" :- assign_education("Pete",J,E), J!="teacher", J!="nurse", J!="police officer".
+
+% 9. Roberta, the chef, and the police officer went golfing together, meaning they are different people.
+P1!=P2 :- assign(P1,"chef"), assign(P2,"police officer").
+P1!=P2 :- assign(P1,"Roberta"), assign(P2,"police officer").
+P1!=P2 :- assign(P1,"chef"), assign(P2,"Roberta").
+
+% 10.1 The same job cannot be assigned to different people.
+{P1=P2; J1=J2}=0 :- assign(P1,J1), assign(P2,J2), (P1,J1)!=(P2,J2).
+
+% 10.2 Roberta is a female.
+G="female" :- assign_gender("Roberta",J,G).
+
+% 10.3 Thelma is a female.
+G="female" :- assign_gender("Thelma",J,G).
+
+% 10.4 Steve is a male.
+G="male" :- assign_gender("Steve",J,G).
+
+% 10.5 Pete is a male.
+G="male" :- assign_gender("Pete",J,G).
+
+% 10.6 The actor is a male.
+G="male" :- assign_gender(P,"actor",G).

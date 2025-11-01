@@ -6,36 +6,89 @@ import os
 kinds = ['constants', 'predicates', 'search_space', 'paraphrasing', 'constraints']
 from api_keys import API_KEY, ORG_KEY
 
-openai.api_key = API_KEY
-openai.organization = ORG_KEY
+openai.api_key = 'key hier' 
+#openai.organization = ORG_KEY
+
 def gen_response(prompt, engine, prompt_cache):
-    # obtain the whole prompt
-    # generate and cache the response in cache if it's not cached before
-    if prompt not in prompt_cache:
-        if engine == 'gpt-4':
-            messages = [{'role': 'user', 'content': prompt}]
-            try:
-                prompt_cache[prompt] = openai.ChatCompletion.create(
-                    messages=messages,
-                    model="gpt-4",
-                    temperature=0,
-                    max_tokens=1500)
-            except:
-                    print("GPT failed.")
-        else:
-            try:
-                prompt_cache[prompt] = openai.Completion.create(
-                    prompt=prompt,
+    import os, hashlib, time
+    os.makedirs('caches', exist_ok=True)
+
+    engine = (engine or "").strip()
+    is_legacy_text = engine.startswith("text-")
+    is_chat = engine.startswith("gpt-") and not is_legacy_text
+    is_new = any(tag in engine for tag in ["gpt-4.1", "gpt-5"])
+
+    # compacte key per prompt
+    key = hashlib.sha256(prompt.encode("utf-8")).hexdigest()[:16]
+
+    # Als er al een (niet-lege) entry is: direct terug
+    val = prompt_cache.get(key, None)
+    if isinstance(val, str) and val.strip():
+        print(f"[HIT] {engine} key={key} len={len(val.strip())}")
+        return val.strip()
+    elif val == "":  # oude 'lege' cache corrigeren
+        print(f"[WARN] Empty cached entry for {key} (engine={engine}) — will refresh.")
+
+    # simpele retry bij tijdelijke fouten
+    last_err = None
+    for attempt in range(3):
+        try:
+            if is_chat:
+                params = {
+                    "model": engine,
+                    "messages": [{"role": "user", "content": prompt}],
+                }
+                if is_new:
+                    params["max_completion_tokens"] = 1500  # 4.1/5
+                else:
+                    params["max_tokens"] = 1500             # 4 / 4-turbo
+                    params["temperature"] = 0
+
+                resp = openai.ChatCompletion.create(**params)
+
+                # --- veilige extractie ---
+                ch = resp.get("choices", [{}])[0]
+                msg = ch.get("message", {})
+                text = msg.get("content", "")
+            else:
+                resp = openai.Completion.create(
                     engine=engine,
-                    temperature=0,
-                    max_tokens=1500)
-            except:
-                print('GPT failed.')
-        with open('caches/prompt_cache_jobspuzzle_'+engine + '.json', 'w') as f:
-            json.dump(prompt_cache, f)
-    if engine == 'gpt-4':
-        return prompt_cache[prompt]['choices'][0]['message']['content'].strip()
-    return prompt_cache[prompt]['choices'][0]['text'].strip()
+                    prompt=prompt,
+                    max_tokens=1500,
+                    temperature=0
+                )
+                ch = resp.get("choices", [{}])[0]
+                text = ch.get("text", "")
+
+            text = (text or "").strip()
+
+            # ABSOLUUT GEEN agressieve strip van fences hier — kan alles leeg maken
+            # if text.startswith("```") and text.endswith("```"):
+            #     text = text.strip("`").strip()
+
+            if not text:
+                print(f"[WARN] Empty content from model on attempt {attempt+1} (engine={engine}, key={key}).")
+                last_err = "empty_content"
+                time.sleep(0.5)
+                continue
+
+            # pas NA succesvolle, niet-lege content: wegschrijven
+            prompt_cache[key] = text
+            cache_path = f'caches/prompt_cache_jobspuzzle_{engine}.json'
+            with open(cache_path, 'w', encoding='utf-8') as f:
+                json.dump(prompt_cache, f, ensure_ascii=False, indent=2)
+
+            print(f"[MISS→SAVE] {engine} key={key} len={len(text)}")
+            return text
+
+        except Exception as e:
+            last_err = str(e)
+            print(f"[ERROR] {engine} attempt {attempt+1}: {e}")
+            time.sleep(0.8)
+
+    # Geen succes: schrijf NIET leeg weg; laat cache-inhoud ongewijzigd
+    print(f"[FAIL] Could not get content for {engine} key={key}. Last error: {last_err}")
+    return ""
 
 
 prompt_C = '''Given a problem, extract all different constants and their categories in the form "category: constant_1; constant_2; ...; constant_n". Here, the format of each constant is turned into either an integer or a string surrounded by double quotes, e.g., "some name". 
@@ -292,9 +345,9 @@ Constraints:'''
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--engine', default='text-davinci-003', type=str,
-        help='the engine name in \{gpt-4, text-davinci-003, text-davinci-002, text-curie-001\}')
+        help=r'the engine name in \{gpt-4, text-davinci-003, text-davinci-002, text-curie-001\}')
     args = parser.parse_args()
-    breakpoint()
+    #breakpoint()
     
     path = 'caches/prompt_cache_jobspuzzle_'+args.engine + '.json'
     if os.path.isfile(path):

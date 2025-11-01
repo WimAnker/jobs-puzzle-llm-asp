@@ -1,0 +1,238 @@
+Let's answer step by step according to your instructions, for **Problem 2: "Against the Grain"**, and **Problem 3 (Job Assignment)** as described:
+
+---
+
+## Problem 2: "Against the Grain"
+
+### **Task 1: Categorized Constants as Rules**
+
+1. **employee: "Bonita"; "Yvette"; "Tabitha".**
+
+   ```prolog
+   employee("Bonita"; "Yvette"; "Tabitha").
+   ```
+
+2. **price: 225; 275; 325.**
+
+   ```prolog
+   price(225; 275; 325).
+   ```
+
+3. **wood_type: "ash"; "poplar"; "sandalwood".**
+
+   ```prolog
+   wood_type("ash"; "poplar"; "sandalwood").
+   ```
+
+---
+
+### **Task 2: Predicate as Rule**
+
+Predicate given:
+```prolog
+% For each employee E, it matches with exactly 1 price P and wood type W.
+{match(E, P, W): price(P), wood_type(W)}=1 :- employee(E).
+```
+
+This fits your rule form:
+```
+{predicate(X_1, X_2, ..., X_n) : category_2(X_2), ..., category_n(X_n)}=k :- category_1(X_1)
+```
+- So, for each `employee` E, the set `{match(E, P, W): price(P), wood_type(W)}` assigns **exactly one** price and wood combination.
+
+---
+
+## Problem 3: Jobs Puzzle
+
+### **Task 1: Categorized Constants as Rules**
+
+1. **person: "Roberta"; "Thelma"; "Steve"; "Pete".**
+
+   ```prolog
+   person("Roberta"; "Thelma"; "Steve"; "Pete").
+   ```
+
+2. **job: "chef"; "guard"; "nurse"; "telephone operator"; "police officer"; "teacher"; "actor"; "boxer".**
+
+   ```prolog
+   job("chef"; "guard"; "nurse"; "telephone operator"; "police officer"; "teacher"; "actor"; "boxer").  
+   ```
+
+---
+
+### **Task 2: Predicate as Rule**
+
+Relation: A person holds a job.
+
+Form:
+```
+{predicate(X_1, X_2, ..., X_n): category_2(X_2), ..., category_n(X_n)}=k :- category_1(X_1)
+```
+Here, for each **person** P, assign exactly 2 jobs (since each holds two jobs):
+
+```prolog
+{holds(P, J): job(J)}=2 :- person(P).
+```
+
+If you'd like a "job-centric" alternative (each job is assigned to exactly one person):
+
+```prolog
+{holds(P, J): person(P)}=1 :- job(J).
+```
+
+---
+
+## **Summary**
+
+### **Problem 2: "Against the Grain"**
+
+**Constants:**
+```prolog
+employee("Bonita"; "Yvette"; "Tabitha").
+price(225; 275; 325).
+wood_type("ash"; "poplar"; "sandalwood").
+```
+**Predicate Rule:**
+```prolog
+{match(E, P, W): price(P), wood_type(W)}=1 :- employee(E).
+```
+
+---
+
+### **Problem 3: Jobs Puzzle**
+
+**Constants:**
+```prolog
+person("Roberta"; "Thelma"; "Steve"; "Pete").
+job("chef"; "guard"; "nurse"; "telephone operator"; "police officer"; "teacher"; "actor"; "boxer").     
+```
+**Predicate Rule:**
+```prolog
+{holds(P, J): job(J)}=2 :- person(P).
+```
+(And/or)
+```prolog
+{holds(P, J): person(P)}=1 :- job(J).
+```
+
+---
+
+**Done!**
+
+Let me know if you need the same for Problem 1 or more details!
+
+Absolutely! Let's **extract the constraints from the text, using only the provided constants and predicates**, for **Problem 3** ("Roberta, Thelma, Steve, Pete" and the 8 jobs), as you requested. We use:     
+
+**Predicates:**
+```prolog
+holds(P, J)
+```
+Where P ∈ {“Roberta", "Thelma", "Steve", "Pete"}, 
+        J ∈ {“chef", "guard", "nurse", "telephone operator", "police officer", "teacher", "actor", "boxer"}
+
+---
+
+## Constraints for Problem 3
+
+### 1. Each person holds **exactly two different jobs**.
+```prolog
+{J1 != J2}=1 :- holds(P, J1), holds(P, J2), J1 != J2.
+% But we must ensure **exactly two** jobs per person; so:
+{holds(P,J): job(J)} = 2 :- person(P).
+```
+
+### 2. Each job is assigned to **exactly one person**.
+```prolog
+{holds(P, J): person(P)} = 1 :- job(J).
+```
+
+### 3. The **nurse is a male**.
+- Steve or Pete (the only males) hold nurse:
+```prolog
+{P="Steve"; P="Pete"} = 1 :- holds(P, "nurse").
+```
+(or, equivalently: `P!="Roberta", P!="Thelma" :- holds(P,"nurse").`)
+
+### 4. The **chef is a female** and her "husband" (must be male) is the telephone operator.
+- Chef: must be female (Roberta, Thelma)
+- Telephone operator: must be male (Steve, Pete)
+- They are married ⇒ chef and telephone operator held by different-gender people:
+```prolog
+{P="Roberta"; P="Thelma"} = 1 :- holds(P, "chef").
+{P="Steve"; P="Pete"} = 1 :- holds(P, "telephone operator").
+P1 != P2 :- holds(P1, "chef"), holds(P2, "telephone operator").
+```
+
+### 5. **Roberta is not a boxer**
+```prolog
+P != "Roberta" :- holds(P, "boxer").
+```
+
+### 6. Pete cannot be **teacher, nurse, or police officer** (he lacks sufficient education).
+```prolog
+P != "Pete" :- holds(P, J), J = "teacher".
+P != "Pete" :- holds(P, J), J = "nurse".
+P != "Pete" :- holds(P, J), J = "police officer".
+```
+Or, grouped:
+```prolog
+{J = "teacher"; J = "nurse"; J = "police officer"} = 0 :- holds("Pete", J).
+```
+
+### 7. **Roberta, the chef, and the police officer are all different people.**
+```prolog
+P1 != P2 :- holds(P1, "chef"), holds(P2, "police officer").
+P1 != "Roberta" :- holds(P1, "chef").
+P2 != "Roberta" :- holds(P2, "police officer").
+```
+Or, more canonically:
+```prolog
+AllDifferent(P1, P2, "Roberta") :- holds(P1, "chef"), holds(P2, "police officer").
+```
+
+### 8. **Gender assignments for persons and for jobs**
+Given in the constants:
+"Roberta" and "Thelma": female
+"Steve" and "Pete": male
+Actor is a male's job:
+```prolog
+{P="Steve"; P="Pete"} = 1 :- holds(P, "actor").
+```
+Or, more generally, if the genders were not obvious, we could encode the mapping and refer.
+---
+
+### **Full Constraints Extracted** (in list form):
+
+```prolog
+% 1. Each person holds exactly two (different) jobs
+{holds(P,J): job(J)} = 2 :- person(P).
+
+% 2. Each job is assigned to exactly one person
+{holds(P,J): person(P)} = 1 :- job(J).
+
+% 3. The nurse is a male
+{P="Steve"; P="Pete"} = 1 :- holds(P, "nurse").
+
+% 4. Chef is a female, telephone operator is a male, and they are different people
+{P="Roberta"; P="Thelma"} = 1 :- holds(P, "chef").
+{P="Steve"; P="Pete"} = 1 :- holds(P, "telephone operator").
+P1 != P2 :- holds(P1, "chef"), holds(P2, "telephone operator").
+
+% 5. Roberta is not a boxer
+P != "Roberta" :- holds(P, "boxer").
+
+% 6. Pete cannot be teacher, nurse, or police officer
+{J = "teacher"; J = "nurse"; J = "police officer"} = 0 :- holds("Pete", J).
+
+% 7. Roberta, the chef, and the police officer are all different people
+P1 != "Roberta" :- holds(P1, "chef").
+P2 != "Roberta" :- holds(P2, "police officer").
+P1 != P2 :- holds(P1, "chef"), holds(P2, "police officer").
+
+% 8. The actor is a male
+{P="Steve"; P="Pete"} = 1 :- holds(P, "actor").
+```
+
+---
+
+**All constraints directly and succinctly extracted from the clues** (no more, no less), using only the given constants and required predicates (`holds(P,J)`). This is in exactly the style/conventions of the sample answers.

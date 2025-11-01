@@ -1,0 +1,4 @@
+{
+  "af986e4268a2a0f5": "Problem 1:\nindex_of_row: 0; 1; 2; 3; 4; 5; 6; 7.\nindex_of_column: 0; 1; 2; 3; 4; 5; 6; 7.\n\nProblem 2:\nemployee: \"Bonita\"; \"Yvette\"; \"Tabitha\".\nprice: 225; 275; 325.\nwood_type: \"ash\"; \"poplar\"; \"sandalwood\".\n\nProblem 3:\nperson: \"Roberta\"; \"Thelma\"; \"Steve\"; \"Pete\".\njob: \"chef\"; \"guard\"; \"nurse\"; \"telephone operator\"; \"police officer\"; \"teacher\"; \"actor\"; \"boxer\".",
+  "38886aa4e3994cf4": "Predicates:\n% Problem 1 (N-Queens): place a queen at row Ir and column Ic.\nassign(Ir, Ic)\n\n% Problem 2 (Furniture logic puzzle): match employee E with price P and wood type W.\nmatch(E, P, W)\n\n% Problem 3 (Jobs): assign person Pe to job J.\nholds(Pe, J)"
+}

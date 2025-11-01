@@ -1,0 +1,43 @@
+% Task 1. Define the constants in each category.
+person("Roberta"; "Thelma"; "Steve"; "Pete").
+job("chef"; "guard"; "nurse"; "telephone operator"; "police officer"; "teacher"; "actor"; "boxer").
+gender("male"; "female").
+% Task 2. For each person P, there is exactly 2 jobs J and gender G.
+{assign(P, J, G): job(J), gender(G)}=2 :- person(P).
+% Done tasks 1 and 2.
+
+% 5. The job of nurse is held by a male.
+G="male" :- assign(P,J,G), J="nurse".
+
+% 6. The husband of the chef is the telephone operator, which means the chef is a female and the telephone operator is a male.
+G1="female" :- assign(P1,J1,G1), assign(P2,J2,G2), J1="chef", J2="telephone operator".
+G2="male" :- assign(P1,J1,G1), assign(P2,J2,G2), J1="chef", J2="telephone operator".
+
+% 7. Roberta is not a boxer.
+J!="boxer" :- assign(P,J,G), P="Roberta".
+
+% 8. Pete has no education past the ninth grade. (Three jobs teacher, nurse, and police officer require higher education.)
+{J="teacher"; J="nurse"; J="police officer"}=0 :- assign(P,J,G), P="Pete".
+
+% 9. Roberta, the chef, and the police officer went golfing together, meaning they are different people.
+P1!=P2 :- assign(P1,J1,G1), assign(P2,J2,G2), assign(P3,J3,G3), P1="Roberta", J2="chef", J3="police officer".
+P2!=P3 :- assign(P1,J1,G1), assign(P2,J2,G2), assign(P3,J3,G3), P1="Roberta", J2="chef", J3="police officer".
+P1!=P3 :- assign(P1,J1,G1), assign(P2,J2,G2), assign(P3,J3,G3), P1="Roberta", J2="chef", J3="police officer".
+
+% 10.1 The same job cannot be assigned to different people.
+{P1=P2; J1=J2}=0 :- assign(P1,J1,G1), assign(P2,J2,G2), (P1,J1)!=(P2,J2).
+
+% 10.2 Roberta is a female.
+G="female" :- assign(P,J,G), P="Roberta".
+
+% 10.3 Thelma is a female.
+G="female" :- assign(P,J,G), P="Thelma".
+
+% 10.4 Steve is a male.
+G="male" :- assign(P,J,G), P="Steve".
+
+% 10.5 Pete is a male.
+G="male" :- assign(P,J,G), P="Pete".
+
+% 10.6 The actor is a male.
+G="male" :- assign(P,J,G), J="actor".
