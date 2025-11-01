@@ -3,11 +3,51 @@ This is the implementation of [Leveraging Large Language Models to Generate Answ
 [Lab page](https://azreasoners.github.io/ARG-webpage/)
 
 ## Installation
-```
+
+\subsection{Installation}
+
+All experiments were executed in a local Conda environment using Python~3.11.
+Because the original pipeline was designed for a deprecated OpenAI API (v0.x),
+the setup was updated to support newer models (GPT-4.1 and GPT-5.0) using the
+current OpenAI \texttt{Responses API}.
+
+The following commands create a fully working environment:
+
+\begin{lstlisting}[language=bash]
+# Create and activate the environment
 conda create --name gpt3-r -c conda-forge python=3.11
 conda activate gpt3-r
-conda install -c conda-forge openai clingo=5.6 tqdm xlsxwriter
-```
+
+# Install non-OpenAI dependencies
+conda install -c conda-forge clingo=5.6 tqdm xlsxwriter
+
+# Install the latest OpenAI library (required for GPT-4.1 / GPT-5)
+pip install --upgrade openai python-dotenv
+\end{lstlisting}
+
+The OpenAI API key must be set via environment variables:
+
+\begin{lstlisting}[language=bash]
+# Windows (PowerShell)
+setx OPENAI_API_KEY "your_api_key_here"
+
+# macOS / Linux
+export OPENAI_API_KEY="your_api_key_here"
+\end{lstlisting}
+
+The installed OpenAI version can be verified with:
+
+\begin{lstlisting}[language=bash]
+python -c "import openai, pkg_resources; \
+print(pkg_resources.get_distribution('openai').version)"
+\end{lstlisting}
+
+\noindent
+\textbf{Note.} The original GPT-3 (davinci-003) model used in the baseline reproduction
+has been discontinued and therefore cannot be rebuilt using current API
+versions. The cached outputs remain valid for comparison.
+
+
 
 ## Preparation
 Include your OpenAI API key in line 2 of `api_keys.py`.
