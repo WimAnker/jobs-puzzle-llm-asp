@@ -39,13 +39,21 @@ def gen_response(prompt: str, engine: str, prompt_cache: dict) -> str:
         try:
             # Responses API (unified, ook voor chat-modellen en instruct-modellen)
             # Let op: max_output_tokens i.p.v. max_tokens
-            resp = client.responses.create(
-                model=engine,
-                # Je gebruikt ‘prompt’-stijl prompts; dat kan als platte string:
-                input=prompt,
-                temperature=0,
-                max_output_tokens=1500,
-            )
+
+            # temperature is ONLY allowed (and ignored) for chat-latest models
+            use_temp = engine.endswith("-chat-latest")
+
+            resp_params = {
+                "model": engine,
+                "input": prompt,
+                "max_output_tokens": 1500,
+            }
+
+            # Only pass temperature for chat-latest models (compat API)
+            if use_temp:
+                resp_params["temperature"] = 0
+
+            resp = client.responses.create(**resp_params)
 
             # Eenvoudige helper: platte tekst uit de response
             text = (resp.output_text or "").strip()

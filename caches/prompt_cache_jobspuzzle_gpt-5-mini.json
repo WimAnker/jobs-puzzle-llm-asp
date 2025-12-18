@@ -1,0 +1,5 @@
+{
+  "6075dca90c8a7c94": "%BEGIN-ASP\nperson: roberta; thelma; steve; pete.\njob: chef; guard; nurse; telephone_operator; police_officer; teacher; actor; boxer.\ngender: male; female.\n%END-ASP",
+  "4a5cabfad9760f9e": "%BEGIN-ASP\nholds(P, J)\nhas_gender(P, G)\n%END-ASP",
+  "c680bc1194c45f59": "%BEGIN-ASP\nperson(roberta).\nperson(thelma).\nperson(steve).\nperson(pete).\n\njob(chef).\njob(guard).\njob(nurse).\njob(telephone_operator).\njob(police_officer).\njob(teacher).\njob(actor).\njob(boxer).\n\ngender(male).\ngender(female).\n\n2 { holds(P,J) : job(J) } 2 :- person(P).\n1 { holds(P,J) : person(P) } 1 :- job(J).\n1 { has_gender(P,G) : gender(G) } 1 :- person(P).\n%END-ASP"
+}
